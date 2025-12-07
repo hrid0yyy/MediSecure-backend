@@ -6,3 +6,8 @@ redis
 python-dotenv
 sqlalchemy
 psycopg2-binary
+passlib[argon2]
+argon2-cffi
+python-jose[cryptography]
+fastapi-limiter
+email-validator
