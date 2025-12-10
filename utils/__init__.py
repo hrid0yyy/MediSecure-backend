@@ -4,5 +4,6 @@ from .security import (
     create_access_token,
     generate_salt,
     generate_verification_code,
-    ACCESS_TOKEN_EXPIRE_MINUTES
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    generate_device_fingerprint
 )

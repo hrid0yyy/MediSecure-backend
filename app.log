@@ -20,3 +20,24 @@
 2025-12-10 19:21:57,243 - INFO - Password reset email sent to redoy.khan898@gmail.com via Gmail.
 2025-12-10 19:22:29,985 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/reset-password Status: 200 Duration: 0.2395s
 2025-12-10 19:22:49,335 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 200 Duration: 0.3337s
+2025-12-10 19:29:08,627 - INFO - IP: 192.168.0.106 Method: GET Path: /auth/signup Status: 405 Duration: 0.0000s
+2025-12-10 19:29:09,793 - INFO - IP: 192.168.0.106 Method: GET Path: /favicon.ico Status: 404 Duration: 0.0000s
+2025-12-10 19:51:49,202 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 200 Duration: 0.6605s
+2025-12-10 19:53:06,039 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 401 Duration: 0.1924s
+2025-12-10 19:54:18,402 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 200 Duration: 1.0209s
+2025-12-10 19:54:29,926 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 401 Duration: 0.1482s
+2025-12-10 20:22:26,892 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 200 Duration: 0.5878s
+2025-12-10 20:23:07,863 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 401 Duration: 0.1600s
+2025-12-10 20:23:25,860 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 200 Duration: 0.1627s
+2025-12-10 20:23:33,863 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 401 Duration: 0.1240s
+2025-12-10 20:29:33,030 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 401 Duration: 0.3704s
+2025-12-10 20:29:37,726 - INFO - New device verification email sent to redoy.khan898@gmail.com via Gmail.
+2025-12-10 20:34:27,548 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/verify-device Status: 400 Duration: 3.2327s
+2025-12-10 20:36:26,385 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/verify-device Status: 400 Duration: 0.0722s
+2025-12-10 20:36:47,443 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 401 Duration: 1.5496s
+2025-12-10 20:36:52,198 - INFO - New device verification email sent to redoy.khan898@gmail.com via Gmail.
+2025-12-10 20:37:34,893 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/verify-device Status: 400 Duration: 0.0160s
+2025-12-10 20:42:51,982 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 401 Duration: 0.2939s
+2025-12-10 20:42:56,320 - INFO - New device verification email sent to redoy.khan898@gmail.com via Gmail.
+2025-12-10 20:43:34,677 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/verify-device Status: 200 Duration: 0.4354s
+2025-12-10 20:50:24,462 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 200 Duration: 0.8120s

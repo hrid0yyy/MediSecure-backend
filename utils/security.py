@@ -12,7 +12,7 @@ pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 # JWT Configuration
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-keep-it-secret")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 300
 
 def generate_salt(length: int = 16) -> str:
     """Generate a unique random salt string."""
@@ -43,6 +43,20 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+import hashlib
+from fastapi import Request
+
 def generate_verification_code(length: int = 6) -> str:
     """Generate a numeric verification code."""
     return ''.join(secrets.choice(string.digits) for i in range(length))
+
+def generate_device_fingerprint(request: Request) -> str:
+    """
+    Generate a unique device fingerprint based on request headers.
+    Combines User-Agent and Client IP.
+    """
+    user_agent = request.headers.get("user-agent", "")
+    client_ip = request.client.host if request.client else "unknown"
+    
+    raw_string = f"{user_agent}|{client_ip}"
+    return hashlib.sha256(raw_string.encode()).hexdigest()

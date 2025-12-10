@@ -1,1 +1,1 @@
-from .user import User, UserRole
+from .user import User, UserRole, UserDevice

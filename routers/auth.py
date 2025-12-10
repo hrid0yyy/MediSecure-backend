@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks, Request
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from fastapi_limiter.depends import RateLimiter
 from config.database import get_db
 from config.redis_db import redis_client
-from models import User
-from schemas import UserCreate, UserLogin, UserVerify, Token, UserForgotPassword, UserResetPassword
+from models import User, UserDevice
+from schemas import UserCreate, UserLogin, UserVerify, Token, UserForgotPassword, UserResetPassword, UserDeviceVerify
 from utils import (
     get_password_hash,
     verify_password,
@@ -12,8 +13,9 @@ from utils import (
     generate_salt,
     generate_verification_code,
     ACCESS_TOKEN_EXPIRE_MINUTES,
+    generate_device_fingerprint
 )
-from datetime import timedelta
+from datetime import datetime, timedelta
 import logging
 import json
 import smtplib
@@ -108,6 +110,41 @@ async def send_password_reset_email(email: EmailStr, code: str):
         logger.error(f"Failed to send email: {e}")
         print(f"FALLBACK - RESET CODE: {code}")
 
+async def send_new_device_email(email: EmailStr, code: str):
+    """Send new device verification email using Gmail SMTP"""
+    
+    html = f"""
+    <html>
+        <body>
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2>New Device Detected</h2>
+                <p>We detected a login from a new device. Please verify it's you using the code below:</p>
+                <h1 style="color: #2196F3; letter-spacing: 5px;">{code}</h1>
+                <p>This code will expire in 10 minutes.</p>
+                <p>If you did not attempt to login, please change your password immediately.</p>
+            </div>
+        </body>
+    </html>
+    """
+
+    try:
+        gmail_email, gmail_password = _get_gmail_credentials()
+        message = EmailMessage()
+        message["Subject"] = "MediSecure - New Device Verification"
+        message["From"] = gmail_email
+        message["To"] = email
+        message.set_content("Use the code above to verify your new device.")
+        message.add_alternative(html, subtype="html")
+
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.starttls()
+            server.login(gmail_email, gmail_password)
+            server.send_message(message)
+        logger.info(f"New device verification email sent to {email} via Gmail.")
+    except Exception as e:
+        logger.error(f"Failed to send email: {e}")
+        print(f"FALLBACK - DEVICE CODE: {code}")
+
 @router.post("/signup", status_code=status.HTTP_201_CREATED, dependencies=[Depends(RateLimiter(times=5, seconds=60))])
 async def signup(user: UserCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     # 1. Check if user exists in DB
@@ -183,7 +220,7 @@ async def verify_email(verification: UserVerify, db: Session = Depends(get_db)):
     return {"message": "Email verified and user registered successfully"}
 
 @router.post("/login", response_model=Token, dependencies=[Depends(RateLimiter(times=5, seconds=60))])
-async def login(user_credentials: UserLogin, db: Session = Depends(get_db)):
+async def login(user_credentials: UserLogin, request: Request, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     # 1. Get User
     user = db.query(User).filter(User.email == user_credentials.email).first()
     if not user:
@@ -197,7 +234,98 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_db)):
     if not verify_password(user_credentials.password, user.salt, user.hashed_password):
         raise HTTPException(status_code=403, detail="Invalid credentials")
 
-    # 4. Generate JWT
+    # 4. Device Fingerprinting
+    current_fingerprint = generate_device_fingerprint(request)
+    
+    # Check if user has any devices registered
+    user_devices = db.query(UserDevice).filter(UserDevice.user_id == user.id).all()
+    
+    if not user_devices:
+        # First login ever (or first since feature added) - register this device
+        new_device = UserDevice(user_id=user.id, fingerprint_hash=current_fingerprint)
+        db.add(new_device)
+        db.commit()
+    else:
+        # Check if current fingerprint matches any known device
+        known_device = next((d for d in user_devices if d.fingerprint_hash == current_fingerprint), None)
+        
+        if not known_device:
+            # New device detected!
+            # Generate verification code
+            code = generate_verification_code()
+            
+            # Store in Redis (Expire in 10 minutes)
+            redis_key = f"device_verify:{user.email}"
+            await redis_client.setex(redis_key, 600, json.dumps({
+                "fingerprint": current_fingerprint,
+                "code": code
+            }))
+            
+            # Send Email
+            background_tasks.add_task(send_new_device_email, user.email, code)
+            
+            # Return specific error/status to frontend to trigger 2FA flow
+            # We cannot use raise HTTPException because it interrupts the request immediately
+            # and background tasks might not be processed if the server shuts down the connection too fast
+            # or if the exception handler doesn't process background tasks.
+            # However, FastAPI Exception handlers DO process background tasks.
+            # The issue is likely that the client sees 401 and disconnects, or the email logic is failing silently.
+            
+            # Let's try returning a JSONResponse with 401 status instead of raising exception
+            return JSONResponse(
+                status_code=401,
+                content={"detail": "New device detected. Please verify your device."},
+                headers={"X-Device-Verification-Required": "true"},
+                background=background_tasks
+            )
+        else:
+            # Update last login for this device
+            known_device.last_login = datetime.utcnow()
+            db.commit()
+
+    # 5. Generate JWT
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.email, "role": user.role.value},
+        expires_delta=access_token_expires
+    )
+
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@router.post("/verify-device", dependencies=[Depends(RateLimiter(times=5, seconds=60))])
+async def verify_device(verification: UserDeviceVerify, request: Request, db: Session = Depends(get_db)):
+    # 1. Get data from Redis
+    redis_key = f"device_verify:{verification.email}"
+    stored_data_json = await redis_client.get(redis_key)
+
+    if not stored_data_json:
+        raise HTTPException(status_code=400, detail="Verification code expired or invalid")
+    
+    stored_data = json.loads(stored_data_json)
+    
+    # 2. Verify Code
+    if stored_data["code"] != verification.code:
+        raise HTTPException(status_code=400, detail="Invalid verification code")
+
+    # 3. Verify Fingerprint matches (security check)
+    current_fingerprint = generate_device_fingerprint(request)
+    if stored_data["fingerprint"] != current_fingerprint:
+        raise HTTPException(status_code=400, detail="Device fingerprint mismatch")
+
+    # 4. Get User
+    user = db.query(User).filter(User.email == verification.email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # 5. Register New Device
+    new_device = UserDevice(user_id=user.id, fingerprint_hash=current_fingerprint)
+    db.add(new_device)
+    db.commit()
+
+    # 6. Delete data from Redis
+    await redis_client.delete(redis_key)
+
+    # 7. Generate JWT (Login successful)
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.email, "role": user.role.value},

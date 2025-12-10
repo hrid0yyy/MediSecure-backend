@@ -21,3 +21,7 @@ class UserResetPassword(BaseModel):
     email: EmailStr
     code: str
     new_password: str
+
+class UserDeviceVerify(BaseModel):
+    email: EmailStr
+    code: str
