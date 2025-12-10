@@ -16,3 +16,7 @@
 2025-12-10 19:06:22,500 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 429 Duration: 0.0020s
 2025-12-10 19:06:39,501 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 429 Duration: 0.0024s
 2025-12-10 19:06:52,089 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 429 Duration: 0.0020s
+2025-12-10 19:21:52,367 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/forgot-password Status: 200 Duration: 0.1829s
+2025-12-10 19:21:57,243 - INFO - Password reset email sent to redoy.khan898@gmail.com via Gmail.
+2025-12-10 19:22:29,985 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/reset-password Status: 200 Duration: 0.2395s
+2025-12-10 19:22:49,335 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 200 Duration: 0.3337s
