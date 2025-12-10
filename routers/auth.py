@@ -4,31 +4,42 @@ from fastapi_limiter.depends import RateLimiter
 from config.database import get_db
 from config.redis_db import redis_client
 from models import User
-from schemas import UserCreate, UserLogin, UserVerify, Token
+from schemas import UserCreate, UserLogin, UserVerify, Token, UserForgotPassword, UserResetPassword
 from utils import (
-    get_password_hash, 
-    verify_password, 
-    create_access_token, 
-    generate_salt, 
+    get_password_hash,
+    verify_password,
+    create_access_token,
+    generate_salt,
     generate_verification_code,
-    ACCESS_TOKEN_EXPIRE_MINUTES
+    ACCESS_TOKEN_EXPIRE_MINUTES,
 )
 from datetime import timedelta
 import logging
 import json
+import smtplib
+from email.message import EmailMessage
+from dotenv import load_dotenv
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 logger = logging.getLogger(__name__)
 
-import resend
 from pydantic import EmailStr
 import os
 
-# Configure Resend
-resend.api_key = os.getenv("RESEND_API_KEY")
+load_dotenv()
+
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = 587
+
+def _get_gmail_credentials():
+    email = os.getenv("GMAIL_EMAIL")
+    password = os.getenv("GMAIL_APP_PASSWORD")
+    if not email or not password:
+        raise ValueError("Gmail credentials are not configured. Set GMAIL_EMAIL and GMAIL_APP_PASSWORD.")
+    return email, password
 
 async def send_verification_email(email: EmailStr, code: str):
-    """Send verification email using Resend"""
+    """Send verification email using Gmail SMTP"""
     
     html = f"""
     <html>
@@ -45,25 +56,57 @@ async def send_verification_email(email: EmailStr, code: str):
     """
 
     try:
-        params = {
-            "from": os.getenv("MAIL_FROM", "medisecure@resend.dev"),
-            "to": [email],
-            "subject": "MediSecure - Email Verification",
-            "html": html,
-        }
+        gmail_email, gmail_password = _get_gmail_credentials()
+        message = EmailMessage()
+        message["Subject"] = "MediSecure - Email Verification"
+        message["From"] = gmail_email
+        message["To"] = email
+        message.set_content("Use the code above to verify your email.")
+        message.add_alternative(html, subtype="html")
 
-        email_response = resend.Emails.send(params)
-        logger.info(f"Verification email sent to {email}. ID: {email_response}")
-        
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.starttls()
+            server.login(gmail_email, gmail_password)
+            server.send_message(message)
+        logger.info(f"Verification email sent to {email} via Gmail.")
     except Exception as e:
         logger.error(f"Failed to send email: {e}")
-        # Fallback to console for development if email fails
         print(f"FALLBACK - CODE: {code}")
-            
+
+async def send_password_reset_email(email: EmailStr, code: str):
+    """Send password reset email using Gmail SMTP"""
+    
+    html = f"""
+    <html>
+        <body>
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2>MediSecure Password Reset</h2>
+                <p>You requested to reset your password. Use the code below:</p>
+                <h1 style="color: #FF5722; letter-spacing: 5px;">{code}</h1>
+                <p>This code will expire in 10 minutes.</p>
+                <p>If you did not request this, please ignore this email.</p>
+            </div>
+        </body>
+    </html>
+    """
+
+    try:
+        gmail_email, gmail_password = _get_gmail_credentials()
+        message = EmailMessage()
+        message["Subject"] = "MediSecure - Password Reset"
+        message["From"] = gmail_email
+        message["To"] = email
+        message.set_content("Use the code above to reset your password.")
+        message.add_alternative(html, subtype="html")
+
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.starttls()
+            server.login(gmail_email, gmail_password)
+            server.send_message(message)
+        logger.info(f"Password reset email sent to {email} via Gmail.")
     except Exception as e:
         logger.error(f"Failed to send email: {e}")
-        # Fallback to console for development if email fails
-        print(f"FALLBACK - CODE: {code}")
+        print(f"FALLBACK - RESET CODE: {code}")
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED, dependencies=[Depends(RateLimiter(times=5, seconds=60))])
 async def signup(user: UserCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
@@ -90,7 +133,7 @@ async def signup(user: UserCreate, background_tasks: BackgroundTasks, db: Sessio
         "email": user.email,
         "hashed_password": hashed_password,
         "salt": salt,
-        "role": user.role.value,
+        "role": "patient",  # Hardcoded to patient
         "code": code
     }
     
@@ -162,3 +205,51 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_db)):
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.post("/forgot-password", dependencies=[Depends(RateLimiter(times=3, seconds=60))])
+async def forgot_password(request: UserForgotPassword, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    # 1. Check if user exists
+    user = db.query(User).filter(User.email == request.email).first()
+    if not user:
+        # For security, don't reveal if user exists or not
+        return {"message": "If the email exists, a reset code has been sent."}
+
+    # 2. Generate Reset Code
+    code = generate_verification_code()
+
+    # 3. Store in Redis (Expire in 10 minutes)
+    redis_key = f"reset:{request.email}"
+    await redis_client.setex(redis_key, 600, code)
+
+    # 4. Send Email
+    background_tasks.add_task(send_password_reset_email, request.email, code)
+
+    return {"message": "If the email exists, a reset code has been sent."}
+
+@router.post("/reset-password", dependencies=[Depends(RateLimiter(times=3, seconds=60))])
+async def reset_password(request: UserResetPassword, db: Session = Depends(get_db)):
+    # 1. Verify Code from Redis
+    redis_key = f"reset:{request.email}"
+    stored_code = await redis_client.get(redis_key)
+
+    if not stored_code or stored_code != request.code:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset code")
+
+    # 2. Get User
+    user = db.query(User).filter(User.email == request.email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # 3. Hash New Password
+    new_salt = generate_salt()
+    new_hashed_password = get_password_hash(request.new_password, new_salt)
+
+    # 4. Update User
+    user.hashed_password = new_hashed_password
+    user.salt = new_salt
+    db.commit()
+
+    # 5. Delete Code from Redis
+    await redis_client.delete(redis_key)
+
+    return {"message": "Password reset successfully"}

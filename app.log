@@ -1,1 +1,18 @@
 2025-12-08 20:56:33,083 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 400 Duration: 0.2086s
+2025-12-10 18:42:56,485 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.5570s
+2025-12-10 18:42:58,392 - ERROR - Failed to send email: You can only send testing emails to your own email address (hridoyahmedddd@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+2025-12-10 18:59:04,998 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.2281s
+2025-12-10 18:59:05,075 - ERROR - Failed to send email: Gmail credentials are not configured. Set GMAIL_EMAIL and GMAIL_APP_PASSWORD.
+2025-12-10 19:01:51,921 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 400 Duration: 0.0900s
+2025-12-10 19:02:10,478 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.1705s
+2025-12-10 19:02:14,816 - INFO - Verification email sent to redoy.khan898@gmail.com via Gmail.
+2025-12-10 19:03:29,346 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/verify-email Status: 200 Duration: 0.3503s
+2025-12-10 19:06:00,100 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 200 Duration: 0.6333s
+2025-12-10 19:06:13,867 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.1787s
+2025-12-10 19:06:16,440 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.1847s
+2025-12-10 19:06:18,001 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.1275s
+2025-12-10 19:06:19,093 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.1271s
+2025-12-10 19:06:20,001 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 429 Duration: 0.0070s
+2025-12-10 19:06:22,500 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 429 Duration: 0.0020s
+2025-12-10 19:06:39,501 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 429 Duration: 0.0024s
+2025-12-10 19:06:52,089 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 429 Duration: 0.0020s
