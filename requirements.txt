@@ -11,3 +11,22 @@ argon2-cffi
 python-jose[cryptography]
 fastapi-limiter
 email-validator
+alembic
+cryptography
+bleach
+python-multipart
+
+# Free alternatives for additional services
+pytesseract  # Free OCR (requires Tesseract installed)
+Pillow  # Free image processing
+celery  # Free background task processing
+python-dateutil  # Free date utilities
+
+# For SMS (free alternatives):
+# - Use email-to-SMS gateways (e.g., phonenumber@txt.att.net)
+# - Or implement in-app notifications only
+
+# For payments (free alternatives):
+# - Manual payment tracking (no processing)
+# - Or integrate PayPal REST SDK (has free tier)
+# - Or use Razorpay (has free tier in some regions)

@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from models import UserRole
+from typing import Optional
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -25,3 +26,19 @@ class UserResetPassword(BaseModel):
 class UserDeviceVerify(BaseModel):
     email: EmailStr
     code: str
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+    role: UserRole
+    is_verified: bool
+    
+    class Config:
+        from_attributes = True
+
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str

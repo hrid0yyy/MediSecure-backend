@@ -1,0 +1,70 @@
+# API Testing Commands
+# Run these commands in a NEW PowerShell terminal while the server is running
+
+# 1. Health Check
+curl http://localhost:8000/health
+
+# 2. Sign Up
+$signupBody = @{
+    email = "testuser@example.com"
+    username = "testuser"
+    password = "TestPass123!@#"
+} | ConvertTo-Json
+
+$signupResponse = Invoke-RestMethod -Uri "http://localhost:8000/api/v1/auth/signup" -Method POST -Body $signupBody -ContentType "application/json"
+$signupResponse
+
+# 3. Login
+$loginBody = @{
+    username = "testuser"
+    password = "TestPass123!@#"
+} | ConvertTo-Json
+
+$loginResponse = Invoke-RestMethod -Uri "http://localhost:8000/api/v1/auth/login" -Method POST -Body $loginBody -ContentType "application/json"
+$token = $loginResponse.access_token
+Write-Host "Token: $token"
+
+# 4. Get Current User (requires token)
+$headers = @{
+    "Authorization" = "Bearer $token"
+}
+Invoke-RestMethod -Uri "http://localhost:8000/api/v1/users/me" -Method GET -Headers $headers
+
+# 5. Update Current User
+$updateBody = @{
+    email = "newemail@example.com"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:8000/api/v1/users/me" -Method PUT -Body $updateBody -ContentType "application/json" -Headers $headers
+
+# 6. Get User Profile
+Invoke-RestMethod -Uri "http://localhost:8000/api/v1/users/me/profile" -Method GET -Headers $headers
+
+# 7. Create/Update User Profile
+$profileBody = @{
+    first_name = "John"
+    last_name = "Doe"
+    date_of_birth = "1990-01-01"
+    phone = "123-456-7890"
+    address = "123 Main St"
+    medical_record_number = "MRN123456"
+    insurance_number = "INS789012"
+    emergency_contact_name = "Jane Doe"
+    emergency_contact_phone = "098-765-4321"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:8000/api/v1/users/me/profile" -Method POST -Body $profileBody -ContentType "application/json" -Headers $headers
+
+# 8. Change Password
+$passwordBody = @{
+    current_password = "TestPass123!@#"
+    new_password = "NewPass123!@#"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:8000/api/v1/users/me/change-password" -Method POST -Body $passwordBody -ContentType "application/json" -Headers $headers
+
+# 9. Get Active Devices
+Invoke-RestMethod -Uri "http://localhost:8000/api/v1/users/me/devices" -Method GET -Headers $headers
+
+# 10. Delete Current User
+Invoke-RestMethod -Uri "http://localhost:8000/api/v1/users/me" -Method DELETE -Headers $headers

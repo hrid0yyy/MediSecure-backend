@@ -231,7 +231,7 @@ async def login(user_credentials: UserLogin, request: Request, background_tasks:
         raise HTTPException(status_code=403, detail="Email not verified")
 
     # 3. Verify Password (using stored salt)
-    if not verify_password(user_credentials.password, user.salt, user.hashed_password):
+    if not verify_password(user_credentials.password, user.hashed_password, user.salt):
         raise HTTPException(status_code=403, detail="Invalid credentials")
 
     # 4. Device Fingerprinting
@@ -286,7 +286,7 @@ async def login(user_credentials: UserLogin, request: Request, background_tasks:
     # 5. Generate JWT
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.email, "role": user.role.value},
+        data={"sub": str(user.id), "role": user.role.value},
         expires_delta=access_token_expires
     )
 
@@ -328,7 +328,7 @@ async def verify_device(verification: UserDeviceVerify, request: Request, db: Se
     # 7. Generate JWT (Login successful)
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.email, "role": user.role.value},
+        data={"sub": str(user.id), "role": user.role.value},
         expires_delta=access_token_expires
     )
 
