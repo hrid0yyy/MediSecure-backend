@@ -26783,3 +26783,12 @@
 2026-01-18 21:34:52,555 - WARNING - Failed to decrypt message: Decryption failed: 
 2026-01-18 21:34:52,555 - WARNING - Failed to decrypt message: Decryption failed: 
 2026-01-18 21:34:52,555 - INFO - IP: 127.0.0.1 Method: GET Path: /api/v1/messages/sent Status: 200 Duration: 0.0101s
+2026-01-18 21:37:26,120 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/logout Status: 200 Duration: 0.0042s
+2026-01-18 21:37:54,082 - INFO - IP: 127.0.0.1 Method: OPTIONS Path: /auth/login Status: 200 Duration: 0.0005s
+2026-01-18 21:37:54,184 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 200 Duration: 0.0946s
+2026-01-18 21:37:54,256 - INFO - IP: 127.0.0.1 Method: GET Path: /api/dashboard/stats Status: 200 Duration: 0.0337s
+2026-01-18 21:37:54,272 - INFO - IP: 127.0.0.1 Method: GET Path: /api/dashboard/stats Status: 200 Duration: 0.0091s
+2026-01-18 21:38:02,786 - INFO - IP: 127.0.0.1 Method: GET Path: /api/doctors Status: 200 Duration: 0.0186s
+2026-01-18 21:38:02,801 - INFO - IP: 127.0.0.1 Method: GET Path: /api/doctors Status: 200 Duration: 0.0081s
+2026-01-18 21:38:03,641 - INFO - IP: 127.0.0.1 Method: GET Path: /api/appointments/my-appointments Status: 200 Duration: 0.0175s
+2026-01-18 21:38:03,661 - INFO - IP: 127.0.0.1 Method: GET Path: /api/appointments/my-appointments Status: 200 Duration: 0.0116s
