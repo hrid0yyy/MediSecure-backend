@@ -9,18 +9,25 @@ class UserRole(str, enum.Enum):
     DOCTOR = "doctor"
     ADMIN = "admin"
     STAFF = "staff"
+    SUPERADMIN = "superadmin"
 
 class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
+    name = Column(String, nullable=True)  # User's display name
     hashed_password = Column(String, nullable=False)
     salt = Column(String, nullable=False)  # Unique random salt per user
     role = Column(Enum(UserRole), default=UserRole.PATIENT, nullable=False)
     is_verified = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)  # For soft delete / account disable
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # Relationships
     devices = relationship("UserDevice", back_populates="user")
+    profile = relationship("UserProfile", back_populates="user", uselist=False)
 
 class UserDevice(Base):
     __tablename__ = "user_devices"

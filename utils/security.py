@@ -78,11 +78,15 @@ def generate_device_fingerprint(request: Request) -> str:
 
 
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db)
+    request: Request,
+    db: Session = Depends(get_db),
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(HTTPBearer(auto_error=False))
 ):
     """
     Dependency to get current authenticated user from JWT token.
+    Supports both:
+    1. HttpOnly cookie (access_token) - preferred for security
+    2. Authorization Bearer header - for API clients
     """
     from models.user import User
     
@@ -92,18 +96,104 @@ async def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
     
-    token = credentials.credentials
+    token = None
+    
+    # 1. Try to get token from HttpOnly cookie first (more secure)
+    cookie_token = request.cookies.get("access_token")
+    if cookie_token:
+        token = cookie_token
+    
+    # 2. Fall back to Authorization header if no cookie
+    elif credentials:
+        token = credentials.credentials
+    
+    if not token:
+        raise credentials_exception
+    
+    # Decode token
     payload = decode_access_token(token)
     
     if payload is None:
         raise credentials_exception
     
-    user_id: int = payload.get("sub")
-    if user_id is None:
+    user_id_str = payload.get("sub")
+    if user_id_str is None:
+        raise credentials_exception
+    
+    try:
+        user_id = int(user_id_str)
+    except (ValueError, TypeError):
         raise credentials_exception
     
     user = db.query(User).filter(User.id == user_id).first()
     if user is None:
         raise credentials_exception
     
+    # Check if user is active
+    if hasattr(user, 'is_active') and not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Account is disabled"
+        )
+    
     return user
+
+
+def require_roles(*allowed_roles):
+    """
+    Dependency factory to require specific roles.
+    
+    Usage:
+        @router.get("/admin-only", dependencies=[Depends(require_roles("admin", "superadmin"))])
+    """
+    async def role_checker(current_user: User = Depends(get_current_user)):
+        from models.user import User, UserRole
+        if current_user.role.value not in allowed_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions"
+            )
+        return current_user
+    return role_checker
+
+
+# Convenience dependencies for role checking
+async def get_current_active_user(current_user = Depends(get_current_user)):
+    """Get current user and verify they are active"""
+    if hasattr(current_user, 'is_active') and not current_user.is_active:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
+
+
+async def get_current_admin(current_user = Depends(get_current_user)):
+    """Require admin or superadmin role"""
+    from models.user import UserRole
+    if current_user.role not in [UserRole.ADMIN, UserRole.SUPERADMIN]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required"
+        )
+    return current_user
+
+
+async def get_current_doctor(current_user = Depends(get_current_user)):
+    """Require doctor role"""
+    from models.user import UserRole
+    if current_user.role != UserRole.DOCTOR:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Doctor privileges required"
+        )
+    return current_user
+
+
+async def get_current_staff_or_above(current_user = Depends(get_current_user)):
+    """Require staff, admin, or superadmin role"""
+    from models.user import UserRole
+    allowed = [UserRole.STAFF, UserRole.ADMIN, UserRole.SUPERADMIN]
+    if current_user.role not in allowed:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Staff privileges required"
+        )
+    return current_user

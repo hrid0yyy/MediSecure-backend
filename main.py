@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from routers import users, auth, user_management, admin, appointments, prescriptions, messaging, billing
+from routers import (
+    users, auth, user_management, admin, 
+    appointments, prescriptions, messaging, billing,
+    # New routers
+    auth_v2, dashboard, patients, doctors, records
+)
 # Import from root middleware.py file
 from middleware import setup_middleware
 # Import from middleware folder files
@@ -25,7 +30,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="MediSecure",
     description="Computer Security Project - Healthcare Data Management Platform",
-    version="2.0.0",
+    version="2.1.0",
     lifespan=lifespan
 )
 
@@ -35,13 +40,43 @@ app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RequestSizeLimitMiddleware, max_request_size=10 * 1024 * 1024)  # 10 MB
 app.add_middleware(AuditLoggingMiddleware)
 
-# Include routers with versioning
-app.include_router(auth.router)  # Keep auth at root for backward compatibility
-app.include_router(user_management.router)  # New versioned user endpoints
-app.include_router(admin.router)  # New versioned admin endpoints
-app.include_router(users.router)  # Legacy endpoints
+# ============ NEW API ROUTES (/api/*) ============
+# These match the frontend expectations
 
-# New service routers
+# Auth with HttpOnly cookies (/api/auth/*)
+app.include_router(auth_v2.router)
+
+# Dashboard API (/api/dashboard/*)
+app.include_router(dashboard.router)
+
+# Patients API (/api/patients/*)
+app.include_router(patients.router)
+
+# Doctors API (/api/doctors/*)
+app.include_router(doctors.router)
+
+# Medical Records API (/api/records/*)
+app.include_router(records.router)
+
+# Appointments API (/api/appointments/*)
+from routers import appointments_v2
+app.include_router(appointments_v2.router)
+
+# ============ EXISTING ROUTES (for backward compatibility) ============
+
+# Legacy auth at /auth/* (keep for backward compatibility)
+app.include_router(auth.router)
+
+# User management at /api/v1/users/*
+app.include_router(user_management.router)
+
+# Admin at /api/v1/admin/*
+app.include_router(admin.router)
+
+# Legacy users endpoints
+app.include_router(users.router)
+
+# Service routers at /api/v1/*
 app.include_router(appointments.router)
 app.include_router(prescriptions.router)
 app.include_router(messaging.router)
@@ -52,13 +87,15 @@ async def root():
     """Root endpoint - returns welcome message"""
     return {
         "message": "Welcome to MediSecure!",
-        "version": "2.0.0",
+        "version": "2.1.0",
         "docs": "/docs",
-        "redoc": "/redoc"
+        "redoc": "/redoc",
+        "api_base": "/api"
     }
 
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {"status": "healthy", "version": "2.0.0"}
+    return {"status": "healthy", "version": "2.1.0"}
+
 
