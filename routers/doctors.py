@@ -104,6 +104,7 @@ def doctor_to_response(doctor: Doctor) -> dict:
         "available_days": doctor.available_days or [],
         "available_hours": doctor.available_hours or {"start": "09:00", "end": "17:00"},
         "is_available": doctor.is_available,
+        "status": "available" if doctor.is_available else "busy",  # For frontend compatibility
         "created_at": doctor.created_at.isoformat() if doctor.created_at else None
     }
 

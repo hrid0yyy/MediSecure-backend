@@ -47,11 +47,8 @@ class Doctor(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships
+    # Relationships - only to User (other relationships handled separately)
     user = relationship("User", backref="doctor_profile")
-    appointments = relationship("Appointment", back_populates="doctor", foreign_keys="Appointment.doctor_id")
-    medical_records = relationship("MedicalRecord", back_populates="doctor")
-    prescriptions = relationship("Prescription", back_populates="doctor")
 
     def __repr__(self):
         return f"<Doctor {self.name} - {self.specialization}>"

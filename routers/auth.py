@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks, Request
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks, Request, Response
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from fastapi_limiter.depends import RateLimiter
@@ -194,8 +194,9 @@ async def verify_email(verification: UserVerify, db: Session = Depends(get_db)):
     
     stored_data = json.loads(stored_data_json)
     
-    # 2. Verify Code
-    if stored_data["code"] != verification.code:
+    # 2. Verify Code (support both 'code' and 'verification_code' from frontend)
+    submitted_code = verification.get_code
+    if not submitted_code or stored_data["code"] != submitted_code:
         raise HTTPException(status_code=400, detail="Invalid verification code")
 
     # 3. Create User in DB
@@ -220,8 +221,8 @@ async def verify_email(verification: UserVerify, db: Session = Depends(get_db)):
 
     return {"message": "Email verified and user registered successfully"}
 
-@router.post("/login", response_model=Token, dependencies=[Depends(RateLimiter(times=5, seconds=60))])
-async def login(user_credentials: UserLogin, request: Request, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+@router.post("/login", dependencies=[Depends(RateLimiter(times=5, seconds=60))])
+async def login(user_credentials: UserLogin, request: Request, response: Response, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     # 1. Get User
     user = db.query(User).filter(User.email == user_credentials.email).first()
     if not user:
@@ -265,14 +266,6 @@ async def login(user_credentials: UserLogin, request: Request, background_tasks:
             # Send Email
             background_tasks.add_task(send_new_device_email, user.email, code)
             
-            # Return specific error/status to frontend to trigger 2FA flow
-            # We cannot use raise HTTPException because it interrupts the request immediately
-            # and background tasks might not be processed if the server shuts down the connection too fast
-            # or if the exception handler doesn't process background tasks.
-            # However, FastAPI Exception handlers DO process background tasks.
-            # The issue is likely that the client sees 401 and disconnects, or the email logic is failing silently.
-            
-            # Let's try returning a JSONResponse with 401 status instead of raising exception
             return JSONResponse(
                 status_code=401,
                 content={"detail": "New device detected. Please verify your device."},
@@ -287,11 +280,54 @@ async def login(user_credentials: UserLogin, request: Request, background_tasks:
     # 5. Generate JWT
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": str(user.id), "role": user.role.value},
+        data={"sub": str(user.id), "role": user.role.value, "email": user.email},
         expires_delta=access_token_expires
     )
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    # 6. Generate refresh token
+    import secrets
+    refresh_token = secrets.token_urlsafe(32)
+    
+    # Store refresh token in Redis (7 days)
+    await redis_client.setex(
+        f"refresh_token:{user.id}:{refresh_token}", 
+        7 * 24 * 60 * 60,  # 7 days
+        json.dumps({"user_id": user.id, "email": user.email})
+    )
+
+    # 7. Set HttpOnly cookies
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,  # Set True in production with HTTPS
+        samesite="lax",
+        max_age=15 * 60,  # 15 minutes
+        path="/"
+    )
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=False,
+        samesite="strict",
+        max_age=7 * 24 * 60 * 60,  # 7 days
+        path="/"
+    )
+
+    # 8. Return response with token (also include in body for backward compatibility)
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "name": user.name,
+            "role": user.role.value,
+            "is_verified": user.is_verified
+        },
+        "message": "Login successful"
+    }
 
 @router.post("/verify-device", dependencies=[Depends(RateLimiter(times=5, seconds=60))])
 async def verify_device(verification: UserDeviceVerify, request: Request, db: Session = Depends(get_db)):
@@ -382,3 +418,117 @@ async def reset_password(request: UserResetPassword, db: Session = Depends(get_d
     await redis_client.delete(redis_key)
 
     return {"message": "Password reset successfully"}
+
+
+@router.post("/refresh")
+async def refresh_token(request: Request, response: Response, db: Session = Depends(get_db)):
+    """
+    Refresh access token using refresh token from cookie.
+    """
+    from utils.security import decode_access_token
+    
+    refresh_token = request.cookies.get("refresh_token")
+    
+    if not refresh_token:
+        raise HTTPException(status_code=401, detail="No refresh token provided")
+    
+    # Find the refresh token in Redis
+    pattern = f"refresh_token:*:{refresh_token}"
+    keys = []
+    async for key in redis_client.scan_iter(match=pattern):
+        keys.append(key)
+    
+    if not keys:
+        raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
+    
+    # Get user data from Redis
+    token_data_json = await redis_client.get(keys[0])
+    if not token_data_json:
+        raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
+    
+    token_data = json.loads(token_data_json)
+    user_id = token_data["user_id"]
+    
+    # Get user from DB
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+    
+    # Generate new access token
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    new_access_token = create_access_token(
+        data={"sub": str(user.id), "role": user.role.value, "email": user.email},
+        expires_delta=access_token_expires
+    )
+    
+    # Set new access token cookie
+    response.set_cookie(
+        key="access_token",
+        value=new_access_token,
+        httponly=True,
+        secure=False,
+        samesite="lax",
+        max_age=15 * 60,
+        path="/"
+    )
+    
+    return {"message": "Token refreshed successfully", "access_token": new_access_token}
+
+
+@router.post("/logout")
+async def logout(request: Request, response: Response):
+    """
+    Logout user and clear cookies.
+    """
+    # Try to delete refresh token from Redis
+    refresh_token = request.cookies.get("refresh_token")
+    if refresh_token:
+        pattern = f"refresh_token:*:{refresh_token}"
+        async for key in redis_client.scan_iter(match=pattern):
+            await redis_client.delete(key)
+    
+    # Clear cookies
+    response.delete_cookie(key="access_token", path="/")
+    response.delete_cookie(key="refresh_token", path="/")
+    
+    return {"message": "Logged out successfully"}
+
+
+@router.get("/me")
+async def get_current_user_info(request: Request, db: Session = Depends(get_db)):
+    """
+    Get current authenticated user info.
+    """
+    from utils.security import decode_access_token
+    
+    token = request.cookies.get("access_token")
+    if not token:
+        # Try Authorization header
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header[7:]
+    
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    payload = decode_access_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {
+        "id": user.id,
+        "email": user.email,
+        "name": user.name,
+        "role": user.role.value,
+        "is_verified": user.is_verified,
+        "is_active": user.is_active if hasattr(user, 'is_active') else True
+    }
+

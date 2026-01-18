@@ -52,11 +52,9 @@ class Patient(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships
+    # Relationships - only to User (other relationships handled separately)
     user = relationship("User", backref="patient_profile")
-    appointments = relationship("Appointment", back_populates="patient", foreign_keys="Appointment.patient_id")
-    medical_records = relationship("MedicalRecord", back_populates="patient")
-    prescriptions = relationship("Prescription", back_populates="patient")
 
     def __repr__(self):
         return f"<Patient {self.name}>"
+

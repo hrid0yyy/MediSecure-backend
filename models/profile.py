@@ -35,4 +35,4 @@ class UserProfile(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     # Relationship
-    user = relationship("User", backref="profile")
+    user = relationship("User", back_populates="profile")
