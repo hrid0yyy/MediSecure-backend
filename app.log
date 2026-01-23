@@ -26792,3 +26792,47 @@
 2026-01-18 21:38:02,801 - INFO - IP: 127.0.0.1 Method: GET Path: /api/doctors Status: 200 Duration: 0.0081s
 2026-01-18 21:38:03,641 - INFO - IP: 127.0.0.1 Method: GET Path: /api/appointments/my-appointments Status: 200 Duration: 0.0175s
 2026-01-18 21:38:03,661 - INFO - IP: 127.0.0.1 Method: GET Path: /api/appointments/my-appointments Status: 200 Duration: 0.0116s
+2026-01-18 21:46:01,872 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/logout Status: 200 Duration: 0.0036s
+2026-01-18 21:46:41,119 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 200 Duration: 0.1019s
+2026-01-18 21:46:41,216 - INFO - IP: 127.0.0.1 Method: GET Path: /api/dashboard/stats Status: 200 Duration: 0.0221s
+2026-01-18 21:46:41,249 - INFO - IP: 127.0.0.1 Method: GET Path: /api/dashboard/stats Status: 200 Duration: 0.0217s
+2026-01-18 21:46:44,798 - INFO - IP: 127.0.0.1 Method: GET Path: /api/doctors Status: 200 Duration: 0.0111s
+2026-01-18 21:46:44,813 - INFO - IP: 127.0.0.1 Method: GET Path: /api/doctors Status: 200 Duration: 0.0082s
+2026-01-18 21:46:53,252 - INFO - IP: 127.0.0.1 Method: GET Path: /api/appointments/my-appointments Status: 200 Duration: 0.0126s
+2026-01-18 21:46:53,274 - INFO - IP: 127.0.0.1 Method: GET Path: /api/appointments/my-appointments Status: 200 Duration: 0.0112s
+2026-01-18 21:46:56,485 - INFO - IP: 127.0.0.1 Method: GET Path: /api/doctors Status: 200 Duration: 0.0774s
+2026-01-18 21:46:56,488 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:46:56,491 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:46:56,493 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:46:56,551 - INFO - IP: 127.0.0.1 Method: GET Path: /api/v1/messages/sent Status: 200 Duration: 0.1446s
+2026-01-18 21:46:56,553 - INFO - IP: 127.0.0.1 Method: GET Path: /api/v1/messages/inbox Status: 200 Duration: 0.1479s
+2026-01-18 21:46:56,580 - INFO - IP: 127.0.0.1 Method: GET Path: /api/doctors Status: 200 Duration: 0.0196s
+2026-01-18 21:46:56,592 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:46:56,592 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:46:56,592 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:46:56,596 - INFO - IP: 127.0.0.1 Method: GET Path: /api/v1/messages/sent Status: 200 Duration: 0.0150s
+2026-01-18 21:46:56,604 - INFO - IP: 127.0.0.1 Method: GET Path: /api/v1/messages/inbox Status: 200 Duration: 0.0224s
+2026-01-18 21:47:21,139 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/logout Status: 200 Duration: 0.0058s
+2026-01-18 21:52:16,547 - INFO - IP: 127.0.0.1 Method: OPTIONS Path: /auth/login Status: 200 Duration: 0.0000s
+2026-01-18 21:52:16,946 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0844s
+2026-01-18 21:52:24,007 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 200 Duration: 0.0906s
+2026-01-18 21:52:24,090 - INFO - IP: 127.0.0.1 Method: GET Path: /api/dashboard/stats Status: 200 Duration: 0.0260s
+2026-01-18 21:52:24,117 - INFO - IP: 127.0.0.1 Method: GET Path: /api/dashboard/stats Status: 200 Duration: 0.0205s
+2026-01-18 21:52:27,631 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:52:27,631 - INFO - IP: 127.0.0.1 Method: GET Path: /api/v1/messages/inbox Status: 200 Duration: 0.0185s
+2026-01-18 21:52:27,632 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:52:27,635 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:52:27,638 - INFO - IP: 127.0.0.1 Method: GET Path: /api/v1/messages/sent Status: 200 Duration: 0.0186s
+2026-01-18 21:52:27,647 - INFO - IP: 127.0.0.1 Method: GET Path: /api/doctors Status: 200 Duration: 0.0045s
+2026-01-18 21:52:27,663 - INFO - IP: 127.0.0.1 Method: GET Path: /api/v1/messages/inbox Status: 200 Duration: 0.0158s
+2026-01-18 21:52:27,666 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:52:27,667 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:52:27,667 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:52:27,674 - INFO - IP: 127.0.0.1 Method: GET Path: /api/v1/messages/sent Status: 200 Duration: 0.0172s
+2026-01-18 21:52:27,686 - INFO - IP: 127.0.0.1 Method: GET Path: /api/doctors Status: 200 Duration: 0.0071s
+2026-01-18 21:52:43,081 - INFO - IP: 127.0.0.1 Method: OPTIONS Path: /api/v1/messages/ Status: 200 Duration: 0.0006s
+2026-01-18 21:52:43,091 - INFO - IP: 127.0.0.1 Method: POST Path: /api/v1/messages/ Status: 201 Duration: 0.0053s
+2026-01-18 21:52:43,110 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:52:43,110 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:52:43,111 - WARNING - Failed to decrypt message: Decryption failed: 
+2026-01-18 21:52:43,111 - INFO - IP: 127.0.0.1 Method: GET Path: /api/v1/messages/sent Status: 200 Duration: 0.0053s
