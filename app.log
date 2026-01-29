@@ -26985,3 +26985,7 @@
 2026-01-29 08:42:20,724 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0657s
 2026-01-29 08:42:22,765 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 403 Duration: 0.0056s
 2026-01-29 08:42:24,799 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 403 Duration: 0.0069s
+2026-01-29 09:37:28,202 - INFO - IP: 127.0.0.1 Method: GET Path: /docs Status: 200 Duration: 0.0010s
+2026-01-29 09:37:31,634 - INFO - IP: 127.0.0.1 Method: GET Path: /openapi.json Status: 200 Duration: 2.7360s
+2026-01-29 09:43:02,767 - INFO - IP: 127.0.0.1 Method: GET Path: /docs Status: 200 Duration: 0.0040s
+2026-01-29 09:43:04,283 - INFO - IP: 127.0.0.1 Method: GET Path: /openapi.json Status: 200 Duration: 0.9338s
