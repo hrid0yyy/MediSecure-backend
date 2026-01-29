@@ -231,7 +231,6 @@ async def login(user_credentials: UserLogin, request: Request, response: Respons
     if user:
         redis_key = f"failed_login:{user.email}"
         failed_attempts = await redis_client.get(redis_key)
-        logger.info(f"DEBUG: Email {user.email} - Attempts: {failed_attempts}")
         if failed_attempts and int(failed_attempts) >= 5:
             raise HTTPException(status_code=403, detail="Account locked due to too many failed attempts. Please try again in 30 minutes.")
 
