@@ -26836,3 +26836,152 @@
 2026-01-18 21:52:43,110 - WARNING - Failed to decrypt message: Decryption failed: 
 2026-01-18 21:52:43,111 - WARNING - Failed to decrypt message: Decryption failed: 
 2026-01-18 21:52:43,111 - INFO - IP: 127.0.0.1 Method: GET Path: /api/v1/messages/sent Status: 200 Duration: 0.0053s
+2026-01-29 08:15:27,180 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0000s
+2026-01-29 08:15:29,296 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 422 Duration: 0.0157s
+2026-01-29 08:15:31,529 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0965s
+2026-01-29 08:15:35,966 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:15:38,192 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0593s
+2026-01-29 08:15:42,074 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:17:49,510 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0010s
+2026-01-29 08:17:51,593 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 422 Duration: 0.0079s
+2026-01-29 08:17:53,703 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 400 Duration: 0.0182s
+2026-01-29 08:17:55,725 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 400 Duration: 0.0070s
+2026-01-29 08:18:38,141 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0000s
+2026-01-29 08:18:40,213 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 422 Duration: 0.0086s
+2026-01-29 08:18:42,345 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0574s
+2026-01-29 08:18:46,691 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:18:48,769 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 429 Duration: 0.0027s
+2026-01-29 08:20:43,573 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0000s
+2026-01-29 08:20:45,779 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 422 Duration: 0.0099s
+2026-01-29 08:20:47,920 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0645s
+2026-01-29 08:20:52,100 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:20:54,334 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0633s
+2026-01-29 08:20:57,991 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:21:00,030 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0063s
+2026-01-29 08:21:02,060 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0036s
+2026-01-29 08:21:04,093 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0043s
+2026-01-29 08:21:06,150 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0043s
+2026-01-29 08:21:08,182 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0049s
+2026-01-29 08:22:07,041 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0000s
+2026-01-29 08:22:09,132 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 422 Duration: 0.0082s
+2026-01-29 08:22:11,295 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0717s
+2026-01-29 08:22:14,909 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:22:17,035 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0615s
+2026-01-29 08:22:20,443 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:22:22,462 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0043s
+2026-01-29 08:22:24,497 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0057s
+2026-01-29 08:22:26,531 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0052s
+2026-01-29 08:22:28,578 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0051s
+2026-01-29 08:22:30,611 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0032s
+2026-01-29 08:23:58,945 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0000s
+2026-01-29 08:24:01,047 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 422 Duration: 0.0078s
+2026-01-29 08:24:03,228 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0696s
+2026-01-29 08:24:06,747 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:24:08,870 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0611s
+2026-01-29 08:24:13,466 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:24:15,515 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0052s
+2026-01-29 08:24:17,553 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0036s
+2026-01-29 08:24:19,591 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0051s
+2026-01-29 08:24:21,641 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0050s
+2026-01-29 08:24:23,682 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0052s
+2026-01-29 08:25:12,562 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0006s
+2026-01-29 08:25:14,651 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 422 Duration: 0.0085s
+2026-01-29 08:25:16,813 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0702s
+2026-01-29 08:25:20,469 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:25:22,595 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0575s
+2026-01-29 08:25:26,422 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:25:28,481 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0033s
+2026-01-29 08:25:30,528 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0039s
+2026-01-29 08:25:32,563 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0044s
+2026-01-29 08:25:34,613 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0036s
+2026-01-29 08:25:36,642 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0025s
+2026-01-29 08:26:50,412 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0007s
+2026-01-29 08:26:52,513 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 422 Duration: 0.0028s
+2026-01-29 08:26:54,620 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0584s
+2026-01-29 08:26:58,219 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:27:00,355 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0764s
+2026-01-29 08:27:03,813 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:27:05,875 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0041s
+2026-01-29 08:27:07,913 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0039s
+2026-01-29 08:27:09,970 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0000s
+2026-01-29 08:27:12,013 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0034s
+2026-01-29 08:27:14,081 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0058s
+2026-01-29 08:28:01,335 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0006s
+2026-01-29 08:28:03,423 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 422 Duration: 0.0068s
+2026-01-29 08:28:05,595 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0670s
+2026-01-29 08:28:09,266 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:28:11,413 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0594s
+2026-01-29 08:28:14,912 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:28:16,969 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0049s
+2026-01-29 08:28:19,008 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0046s
+2026-01-29 08:28:21,031 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0033s
+2026-01-29 08:28:23,068 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0050s
+2026-01-29 08:28:25,117 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0041s
+2026-01-29 08:29:12,531 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0000s
+2026-01-29 08:29:14,601 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 422 Duration: 0.0028s
+2026-01-29 08:29:16,713 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0647s
+2026-01-29 08:29:20,461 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:29:22,562 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.0736s
+2026-01-29 08:29:26,041 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:29:28,084 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0047s
+2026-01-29 08:29:30,117 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0042s
+2026-01-29 08:29:32,151 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0037s
+2026-01-29 08:29:34,192 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0046s
+2026-01-29 08:29:36,235 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0005s
+2026-01-29 08:30:49,926 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0020s
+2026-01-29 08:30:52,337 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 422 Duration: 0.0208s
+2026-01-29 08:30:55,051 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.5253s
+2026-01-29 08:30:58,614 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:31:00,872 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/signup Status: 201 Duration: 0.1313s
+2026-01-29 08:31:04,439 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:31:06,504 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0087s
+2026-01-29 08:31:08,551 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0010s
+2026-01-29 08:31:10,597 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0039s
+2026-01-29 08:31:12,651 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0012s
+2026-01-29 08:31:14,701 - INFO - IP: 127.0.0.1 Method: POST Path: /auth/login Status: 403 Duration: 0.0031s
+2026-01-29 08:33:03,335 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0000s
+2026-01-29 08:33:05,560 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 422 Duration: 0.0087s
+2026-01-29 08:33:07,726 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 201 Duration: 0.0757s
+2026-01-29 08:33:11,428 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:33:13,563 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 201 Duration: 0.0713s
+2026-01-29 08:33:17,060 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:33:19,119 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0057s
+2026-01-29 08:33:21,163 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0042s
+2026-01-29 08:33:23,211 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0046s
+2026-01-29 08:33:25,269 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0042s
+2026-01-29 08:33:27,320 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0075s
+2026-01-29 08:34:04,056 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0000s
+2026-01-29 08:34:06,149 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 422 Duration: 0.0093s
+2026-01-29 08:34:08,300 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 201 Duration: 0.0668s
+2026-01-29 08:34:11,825 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:34:13,979 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 201 Duration: 0.0636s
+2026-01-29 08:34:17,546 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:34:19,593 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0016s
+2026-01-29 08:34:21,655 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0046s
+2026-01-29 08:34:23,685 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0000s
+2026-01-29 08:34:25,737 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0042s
+2026-01-29 08:34:27,774 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0055s
+2026-01-29 08:35:11,513 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0023s
+2026-01-29 08:35:13,630 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 422 Duration: 0.0176s
+2026-01-29 08:35:15,909 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 201 Duration: 0.0773s
+2026-01-29 08:35:19,664 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:35:21,813 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 201 Duration: 0.0589s
+2026-01-29 08:35:25,300 - INFO - Verification email sent to lockout_test@example.com via Gmail.
+2026-01-29 08:35:27,341 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0065s
+2026-01-29 08:35:29,368 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0054s
+2026-01-29 08:35:31,389 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0045s
+2026-01-29 08:35:33,424 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0053s
+2026-01-29 08:35:35,451 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0000s
+2026-01-29 08:41:39,274 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0000s
+2026-01-29 08:41:41,363 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 422 Duration: 0.0039s
+2026-01-29 08:41:43,459 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 201 Duration: 0.0708s
+2026-01-29 08:41:47,103 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:42:06,543 - INFO - IP: 127.0.0.1 Method: GET Path: /health Status: 200 Duration: 0.0010s
+2026-01-29 08:42:08,643 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 422 Duration: 0.0008s
+2026-01-29 08:42:10,741 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/signup Status: 201 Duration: 0.0668s
+2026-01-29 08:42:14,311 - INFO - Verification email sent to policy_test@example.com via Gmail.
+2026-01-29 08:42:16,528 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0717s
+2026-01-29 08:42:18,628 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0687s
+2026-01-29 08:42:20,724 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 401 Duration: 0.0657s
+2026-01-29 08:42:22,765 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 403 Duration: 0.0056s
+2026-01-29 08:42:24,799 - INFO - IP: 127.0.0.1 Method: POST Path: /api/auth/login Status: 403 Duration: 0.0069s
