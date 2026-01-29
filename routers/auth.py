@@ -226,6 +226,14 @@ async def verify_email(verification: UserVerify, db: Session = Depends(get_db)):
 async def login(user_credentials: UserLogin, request: Request, response: Response, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     # 1. Get User
     user = db.query(User).filter(User.email == user_credentials.email).first()
+
+    # LOCKOUT CHECK
+    if user:
+        redis_key = f"failed_login:{user.email}"
+        failed_attempts = await redis_client.get(redis_key)
+        if failed_attempts and int(failed_attempts) >= 5:
+            raise HTTPException(status_code=403, detail="Account locked due to too many failed attempts. Please try again in 30 minutes.")
+
     if not user:
         raise HTTPException(status_code=403, detail="Invalid credentials")
 
@@ -235,7 +243,16 @@ async def login(user_credentials: UserLogin, request: Request, response: Respons
 
     # 3. Verify Password (using stored salt)
     if not verify_password(user_credentials.password, user.hashed_password, user.salt):
+        # INCREMENT FAILURE COUNTER
+        redis_key = f"failed_login:{user.email}"
+        attempts = await redis_client.incr(redis_key)
+        if attempts == 1:
+            await redis_client.expire(redis_key, 1800) # 30 mins
+        
         raise HTTPException(status_code=403, detail="Invalid credentials")
+    
+    # Login Successful - Clear Counter
+    await redis_client.delete(f"failed_login:{user.email}")
 
     # 4. Device Fingerprinting
     current_fingerprint = generate_device_fingerprint(request)

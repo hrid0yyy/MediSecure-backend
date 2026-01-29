@@ -1,7 +1,8 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, validator
 from models import UserRole
 from typing import Optional
 from datetime import datetime
+from utils.security import validate_password_strength
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -11,6 +12,14 @@ class UserCreate(UserBase):
     password: str
     name: Optional[str] = None
     role: Optional[UserRole] = UserRole.PATIENT
+
+    @validator('password')
+    def validate_password(cls, v):
+        try:
+            validate_password_strength(v)
+        except ValueError as e:
+            raise ValueError(str(e))
+        return v
 
 # Login request - matches frontend LoginRequest
 class UserLogin(UserBase):
@@ -40,6 +49,14 @@ class UserResetPassword(BaseModel):
     @property
     def get_code(self) -> str:
         return self.reset_code or self.code or ""
+
+    @validator('new_password')
+    def validate_password(cls, v):
+        try:
+            validate_password_strength(v)
+        except ValueError as e:
+            raise ValueError(str(e))
+        return v
 
 class UserDeviceVerify(BaseModel):
     email: EmailStr
@@ -79,6 +96,14 @@ class UserUpdate(BaseModel):
 class ChangePasswordRequest(BaseModel):
     current_password: str
     new_password: str
+
+    @validator('new_password')
+    def validate_password(cls, v):
+        try:
+            validate_password_strength(v)
+        except ValueError as e:
+            raise ValueError(str(e))
+        return v
 
 # Token schema (for internal use, not returned to client anymore)
 class Token(BaseModel):
